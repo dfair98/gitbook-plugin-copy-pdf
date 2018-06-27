@@ -18,60 +18,54 @@ module.exports = {
             var filePath = './';
             copy_pdf(filePath);
 
-            function copy_pdf(filePath)
-            {
+            function copy_pdf(filePath){
                 //Return file list
-                fs.readdir(filePath, function(err, files)
-                {
-                    if (err)
-                    {
+                fs.readdir(filePath, function(err, files){
+                    if (err){
                         console.warn(err)
-                    }
-                    else
-                    {
+                    }else{
                         //Traverse files in file list.  
-                        files.forEach(function(filename)
-                        {
+                        files.forEach(function(filename){
+
                             var filedir = path.join(filePath, filename);
-                            var filePath_new = path.join('./_book', filePath);
+                            var filePath_new = path.join('./public', filePath);
                             //Return fs.Stats object  
-                            fs.stat(filedir, function(eror, stats)
-                            {
-                                if (eror)
-                                {
+                            fs.stat(filedir, function(err, stats){
+                                if (err){
                                     console.warn('Get file stats failed');
-                                }
-                                else
-                                {
+                                }else{
                                     var isFile = stats.isFile();
                                     var isDir = stats.isDirectory();
-                                    if (isFile)
-                                    {
+                                   if (isFile){
                                         var extension = path.extname(filename);
-                                        if (".pdf" == extension.toLowerCase())
-                                        {
-                                            var cmd = 'mkdir -p ' + filePath_new;
-                                            cmd = cmd + ';\\cp -f "' + filedir + '" "' + filePath_new + '"';
-                                            //console.log(cmd);
-                                            exec(cmd, function(error, stdout, stderr)
-                                            {
-                                                if (error)
-                                                {
-                                                    console.log(error);
-                                                    return;
-                                                }
-                                            })
-                                        }
+                                        if (".pdf" == extension.toLowerCase()) copyFile(filedir ,filePath_new);
                                     }
-                                    if (isDir && ("_book" != filename))
-                                    {
-                                        copy_pdf(filedir);
-                                    }
+                                    if (isDir && ("public" != filename)) copy_pdf(filedir);
                                 }
-                            })
+                            });
                         });
                     }
                 });
+            }
+
+            function copyFile(src, dest) {
+
+                let readStream = fs.createReadStream(src);
+              
+                readStream.once('error', (err) => {
+                  console.log(err);
+                });
+              
+                readStream.once('end', () => {
+                  console.log('done copying');
+                });
+              
+                readStream.pipe(fs.createWriteStream(dest));
+            }
+            
+            function getConfig(context, property, defaultValue) {
+                var config = context.config ? /* 3.x */ context.config : /* 2.x */ context.book.config;
+                return config.get(property, defaultValue);
             }
         }
     }
