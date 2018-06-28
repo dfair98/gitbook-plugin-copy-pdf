@@ -51,7 +51,7 @@ module.exports = {
                 const fs = require('fs-extra')  
                 try {  
                     fs.copySync(source, target)  
-                 console.log('Copied PDF to '+ target +'!')  
+                 console.info('Copied PDF to '+ target +'!')  
                 } catch (err) {  
                  console.error(err)  
                 }  
