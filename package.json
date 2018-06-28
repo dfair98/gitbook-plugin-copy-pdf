@@ -13,5 +13,8 @@
                 "description": "Book output path, defaults to _book"
             }
         }
-    }
+    },
+    "dependencies": {
+        "fs-extra": "latest"
+      },
 }
