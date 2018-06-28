@@ -1,5 +1,4 @@
-const exec = require('child_process')
-    .exec;
+
 
 module.exports = {
     hooks:
@@ -7,13 +6,14 @@ module.exports = {
         // For all the hooks, this represent the current generator
 
         // This is called before the book is generated
-        "init": function() {},
+        "init": function() {
+                },
 
         // This is called after the book generation
         "finish": function()
         {
-            var fs = require('fs');
-            var path = require('path');
+           var fs = require('fs-extra');  
+             var path = require('path');
             //Use relative directory.
             var filePath = './';
             copy_pdf(filePath);
@@ -28,7 +28,7 @@ module.exports = {
                         files.forEach(function(filename){
 
                             var filedir = path.join(filePath, filename);
-                            var filePath_new = path.join('./public', filePath);
+                            var filePath_new = path.join('./public', filedir);
                             //Return fs.Stats object  
                             fs.stat(filedir, function(err, stats){
                                 if (err){
@@ -47,26 +47,16 @@ module.exports = {
                     }
                 });
             }
+            async function copyFile(source, target) {
+                const fs = require('fs-extra')  
+                try {  
+                    fs.copySync(source, target)  
+                 console.log('Copied PDF to '+ target +'!')  
+                } catch (err) {  
+                 console.error(err)  
+                }  
+              }
 
-            function copyFile(src, dest) {
-
-                let readStream = fs.createReadStream(src);
-              
-                readStream.once('error', (err) => {
-                  console.log(err);
-                });
-              
-                readStream.once('end', () => {
-                  console.log('done copying');
-                });
-              
-                readStream.pipe(fs.createWriteStream(dest));
-            }
-            
-            function getConfig(context, property, defaultValue) {
-                var config = context.config ? /* 3.x */ context.config : /* 2.x */ context.book.config;
-                return config.get(property, defaultValue);
-            }
         }
     }
 };

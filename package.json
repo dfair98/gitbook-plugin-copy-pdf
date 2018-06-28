@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "description": "Copy all pdf files to corresponding directory into the book output path",
     "engines": {
-        "gitbook": ">2.x.x"
+        "gitbook": "3.x.x"
     },
     "gitbook": {
         "properties": {
